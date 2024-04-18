@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  company_id Int        @id @default(autoincrement())
+  nickname   String
+  trade_name String
+  legal_name String
+  cnpj       String
+  uf         String
+  city       String
+  logo       String?
+  Contract   Contract[]
+}
+
+model Contract {
+  contract_id  Int      @id @default(autoincrement())
+  start_date   DateTime
+  sign_date    DateTime
+  contract_tax Float
+  company      Company  @relation(fields: [company_id], references: [company_id])
+  company_id   Int
+  service_id   Int
+  service      Service  @relation(fields: [service_id], references: [service_id])
+}
+
+model Department {
+  department_id     Int                 @id @default(autoincrement())
+  name              String
+  DepartmentService DepartmentService[]
+}
+
+model Service {
+  service_id        Int                 @id @default(autoincrement())
+  name              String
+  Contract          Contract[]
+  DepartmentService DepartmentService[]
+}
+
+model DepartmentService {
+  department_id Int
+  service_id    Int
+  department    Department @relation(fields: [department_id], references: [department_id])
+  service       Service    @relation(fields: [service_id], references: [service_id])
+
+  @@unique([department_id, service_id])
+}
