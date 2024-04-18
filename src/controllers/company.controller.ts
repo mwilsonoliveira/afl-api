@@ -9,7 +9,7 @@ export class CompanyController {
 
   @Get('/:id')
   async findCompany(@Param('id') id: string) {
-    const company = await this.prismaService.company.findUnique({
+    const company = await this.prismaService.companies.findUnique({
       where: {
         company_id: id,
       },
@@ -22,7 +22,7 @@ export class CompanyController {
   async createCompany(@Body() body: CreateCompany) {
     const { nickname, trade_name, legal_name, cnpj, uf, city, logo } = body;
 
-    const company = await this.prismaService.company.create({
+    const company = await this.prismaService.companies.create({
       data: {
         company_id: randomUUID(),
         nickname,

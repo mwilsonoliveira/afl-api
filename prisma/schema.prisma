@@ -13,8 +13,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Company {
-  company_id String     @id @default(uuid())
+model Companies {
+  company_id String      @id @default(uuid())
   nickname   String
   trade_name String
   legal_name String
@@ -22,38 +22,38 @@ model Company {
   uf         String
   city       String
   logo       String?
-  Contract   Contract[]
+  Contracts  Contracts[]
 }
 
-model Contract {
-  contract_id  String   @id @default(uuid())
-  start_date   DateTime
-  sign_date    DateTime
-  contract_tax Float
-  company      Company  @relation(fields: [company_id], references: [company_id])
-  company_id   String
-  service_id   String
-  service      Service  @relation(fields: [service_id], references: [service_id])
+model Contracts {
+  contract_id    String    @id @default(uuid())
+  effective_date DateTime
+  sign_date      DateTime
+  contract_tax   Float
+  company        Companies @relation(fields: [company_id], references: [company_id])
+  company_id     String
+  service_id     String
+  service        Services  @relation(fields: [service_id], references: [service_id])
 }
 
-model Department {
-  department_id     String              @id @default(uuid())
-  name              String
-  DepartmentService DepartmentService[]
+model Departments {
+  department_id       String                @id @default(uuid())
+  name                String
+  DepartmentsServices DepartmentsServices[]
 }
 
-model Service {
-  service_id        String              @id @default(uuid())
-  name              String
-  Contract          Contract[]
-  DepartmentService DepartmentService[]
+model Services {
+  service_id          String                @id @default(uuid())
+  name                String
+  Contracts           Contracts[]
+  DepartmentsServices DepartmentsServices[]
 }
 
-model DepartmentService {
+model DepartmentsServices {
   department_id String
   service_id    String
-  department    Department @relation(fields: [department_id], references: [department_id])
-  service       Service    @relation(fields: [service_id], references: [service_id])
+  department    Departments @relation(fields: [department_id], references: [department_id])
+  service       Services    @relation(fields: [service_id], references: [service_id])
 
   @@unique([department_id, service_id])
 }
