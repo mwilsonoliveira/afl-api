@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { PrismaService } from 'src/database/prisma.service';
-import { CreateCompany } from 'src/dtos/create-company';
+import { CreateCompany } from 'src/dtos/company/create-company';
 
 @Controller('company')
 export class CompanyController {
