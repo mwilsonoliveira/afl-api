@@ -8,7 +8,7 @@ export class CompanyController {
   constructor(private prismaService: PrismaService) {}
 
   @Get('/:id')
-  async findCompany(@Param('id') id: string) {
+  async getCompany(@Param('id') id: string) {
     const company = await this.prismaService.companies.findUnique({
       where: {
         company_id: id,
@@ -18,7 +18,7 @@ export class CompanyController {
     return company;
   }
 
-  @Post()
+  @Post('/create')
   async createCompany(@Body() body: CreateCompany) {
     const { nickname, trade_name, legal_name, cnpj, uf, city, logo } = body;
 

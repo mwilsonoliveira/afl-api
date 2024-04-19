@@ -21,39 +21,33 @@ model Companies {
   cnpj       String
   uf         String
   city       String
-  logo       String?
+  logo       String
   Contracts  Contracts[]
 }
 
 model Contracts {
-  contract_id    String    @id @default(uuid())
+  contract_id    String        @id @default(uuid())
+  value          Float
+  status         String
   effective_date DateTime
   sign_date      DateTime
   contract_tax   Float
-  company        Companies @relation(fields: [company_id], references: [company_id])
+  company        Companies     @relation(fields: [company_id], references: [company_id])
   company_id     String
-  service_id     String
-  service        Services  @relation(fields: [service_id], references: [service_id])
+  departments    Departments[] // Array de departamentos com serviços
 }
 
 model Departments {
-  department_id       String                @id @default(uuid())
-  name                String
-  DepartmentsServices DepartmentsServices[]
+  department_id String     @id @default(uuid())
+  name          String
+  services      Services[] // Array de serviços associados ao departamento
+  Contracts     Contracts  @relation(fields: [contracts_id], references: [contract_id])
+  contracts_id  String
 }
 
 model Services {
-  service_id          String                @id @default(uuid())
-  name                String
-  Contracts           Contracts[]
-  DepartmentsServices DepartmentsServices[]
-}
-
-model DepartmentsServices {
-  department_id String
-  service_id    String
-  department    Departments @relation(fields: [department_id], references: [department_id])
-  service       Services    @relation(fields: [service_id], references: [service_id])
-
-  @@unique([department_id, service_id])
+  service_id     String      @id @default(uuid())
+  name           String
+  Departments    Departments @relation(references: [department_id], fields: [departments_id])
+  departments_id String
 }
