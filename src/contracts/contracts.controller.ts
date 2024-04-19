@@ -27,7 +27,15 @@ export class ContractsController {
 
   @Get()
   async getAllContracts() {
-    const contracts = await this.prismaService.contract.findMany();
+    const contracts = await this.prismaService.contract.findMany({
+      include: {
+        departments: {
+          include: {
+            services: true,
+          },
+        },
+      },
+    });
     return contracts;
   }
 
