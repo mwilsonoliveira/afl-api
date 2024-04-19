@@ -14,6 +14,20 @@ import { randomUUID } from 'node:crypto';
 export class ContractsController {
   constructor(private prismaService: PrismaService) {}
 
+  @Get()
+  async getAllContracts() {
+    const contracts = await this.prismaService.contract.findMany({
+      include: {
+        departments: {
+          include: {
+            services: true,
+          },
+        },
+      },
+    });
+    return contracts;
+  }
+
   @Get('/:id')
   async getContract(@Param('id') id: string) {
     const contract = await this.prismaService.contract.findUnique({
@@ -37,20 +51,6 @@ export class ContractsController {
     }
 
     return contract;
-  }
-
-  @Get()
-  async getAllContracts() {
-    const contracts = await this.prismaService.contract.findMany({
-      include: {
-        departments: {
-          include: {
-            services: true,
-          },
-        },
-      },
-    });
-    return contracts;
   }
 
   @Post('/create')

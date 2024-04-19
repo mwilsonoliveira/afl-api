@@ -1,4 +1,11 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { PrismaService } from 'src/database/prisma.service';
 import { randomUUID } from 'node:crypto';
@@ -6,20 +13,6 @@ import { randomUUID } from 'node:crypto';
 @Controller('services')
 export class ServicesController {
   constructor(private prismaService: PrismaService) {}
-
-  @Post('/create')
-  async create(@Body() createServiceDto: CreateServiceDto) {
-    const { name } = createServiceDto;
-
-    const service = await this.prismaService.service.create({
-      data: {
-        service_id: randomUUID(),
-        name,
-      },
-    });
-
-    return service;
-  }
 
   @Get()
   async getAllServices() {
@@ -35,16 +28,44 @@ export class ServicesController {
       },
     });
 
+    if (!service) {
+      throw new BadRequestException(`Service with ID ${id} not found`, {
+        cause: new Error(),
+        description: `Service with ID ${id} not found`,
+      });
+    }
+
     return service;
   }
 
-  @Delete(':id')
+  @Post('/create')
+  async create(@Body() createServiceDto: CreateServiceDto) {
+    const { name } = createServiceDto;
+
+    const service = await this.prismaService.service.create({
+      data: {
+        service_id: randomUUID(),
+        name,
+      },
+    });
+
+    return service;
+  }
+
+  @Post('/delete/:id')
   async deleteService(@Param('id') id: string) {
     const service = await this.prismaService.service.delete({
       where: {
         service_id: id,
       },
     });
+
+    if (!service) {
+      throw new BadRequestException(`Service with ID ${id} not found`, {
+        cause: new Error(),
+        description: `Service with ID ${id} not found`,
+      });
+    }
 
     return service;
   }

@@ -1,4 +1,11 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { PrismaService } from 'src/database/prisma.service';
 import { randomUUID } from 'node:crypto';
@@ -7,7 +14,13 @@ import { randomUUID } from 'node:crypto';
 export class DepartmentsController {
   constructor(private prismaService: PrismaService) {}
 
-  @Get('/:id')
+  @Get()
+  async getAllDepartments() {
+    const departments = await this.prismaService.department.findMany();
+    return departments;
+  }
+
+  @Get(':id')
   async getDepartment(@Param('id') id: string) {
     const department = await this.prismaService.department.findUnique({
       where: {
@@ -15,13 +28,14 @@ export class DepartmentsController {
       },
     });
 
-    return department;
-  }
+    if (!department) {
+      throw new BadRequestException(`Department with ID ${id} not found`, {
+        cause: new Error(),
+        description: `Department with ID ${id} not found`,
+      });
+    }
 
-  @Get()
-  async getAllDepartments() {
-    const departments = await this.prismaService.department.findMany();
-    return departments;
+    return department;
   }
 
   @Post('/create')
@@ -37,13 +51,20 @@ export class DepartmentsController {
     return department;
   }
 
-  @Delete(':id')
+  @Post('/delete/:id')
   async deleteDepartment(@Param('id') id: string) {
     const department = await this.prismaService.department.delete({
       where: {
         department_id: id,
       },
     });
+
+    if (!department) {
+      throw new BadRequestException(`Department with ID ${id} not found`, {
+        cause: new Error(),
+        description: `Department with ID ${id} not found`,
+      });
+    }
 
     return department;
   }

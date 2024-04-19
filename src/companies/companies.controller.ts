@@ -14,6 +14,24 @@ import { CreateCompanyDto } from 'src/Companies/dto/create-company';
 export class CompanyController {
   constructor(private prismaService: PrismaService) {}
 
+  @Get()
+  async getAllCompanies() {
+    const companies = await this.prismaService.company.findMany({
+      include: {
+        contracts: {
+          include: {
+            departments: {
+              include: {
+                services: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return companies;
+  }
+
   @Get('/:id')
   async getCompany(@Param('id') id: string) {
     const company = await this.prismaService.company.findUnique({
@@ -41,24 +59,6 @@ export class CompanyController {
     }
 
     return company;
-  }
-
-  @Get()
-  async getAllCompanies() {
-    const companies = await this.prismaService.company.findMany({
-      include: {
-        contracts: {
-          include: {
-            departments: {
-              include: {
-                services: true,
-              },
-            },
-          },
-        },
-      },
-    });
-    return companies;
   }
 
   @Post('/create')
