@@ -13,8 +13,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Companies {
-  company_id String      @id @default(uuid())
+model Company {
+  company_id String     @id @default(uuid())
   nickname   String
   trade_name String
   legal_name String
@@ -22,32 +22,33 @@ model Companies {
   uf         String
   city       String
   logo       String
-  Contracts  Contracts[]
+  Contracts  Contract[]
 }
 
-model Contracts {
-  contract_id    String        @id @default(uuid())
+model Contract {
+  contract_id    String       @id @default(uuid())
   value          Float
   status         String
   effective_date DateTime
   sign_date      DateTime
   contract_tax   Float
-  company        Companies     @relation(fields: [company_id], references: [company_id])
+  departments    Department[]
   company_id     String
-  departments    Departments[] // Array de departamentos com serviços
+  company        Company      @relation(fields: [company_id], references: [company_id])
 }
 
-model Departments {
-  department_id String     @id @default(uuid())
+model Department {
+  department_id String    @id @default(uuid())
   name          String
-  services      Services[] // Array de serviços associados ao departamento
-  Contracts     Contracts  @relation(fields: [contracts_id], references: [contract_id])
-  contracts_id  String
+  service       Service[]
+  service_id    String
+  Contract      Contract  @relation(fields: [contract_id], references: [contract_id])
+  contract_id   String
 }
 
-model Services {
-  service_id     String      @id @default(uuid())
-  name           String
-  Departments    Departments @relation(references: [department_id], fields: [departments_id])
-  departments_id String
+model Service {
+  service_id    String     @id @default(uuid())
+  name          String
+  Department    Department @relation(references: [department_id], fields: [department_id])
+  department_id String
 }
