@@ -20,7 +20,21 @@ export class ContractsController {
       where: {
         contract_id: id,
       },
+      include: {
+        departments: {
+          include: {
+            services: true,
+          },
+        },
+      },
     });
+
+    if (!contract) {
+      throw new BadRequestException(`Contract with ID ${id} not found`, {
+        cause: new Error(),
+        description: `Contract with ID ${id} not found`,
+      });
+    }
 
     return contract;
   }
