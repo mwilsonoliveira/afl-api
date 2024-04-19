@@ -2,13 +2,14 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { PrismaService } from 'src/database/prisma.service';
-import { CreateCompany } from 'src/Companies/dto/create-company';
+import { CreateCompanyDto } from 'src/Companies/dto/create-company';
 
 @Controller('companies')
 export class CompanyController {
@@ -26,14 +27,15 @@ export class CompanyController {
   }
 
   @Get()
-  async findAll() {
+  async getAllCompanies() {
     const companies = await this.prismaService.company.findMany();
     return companies;
   }
 
   @Post('/create')
-  async createCompany(@Body() body: CreateCompany) {
-    const { nickname, trade_name, legal_name, cnpj, uf, city, logo } = body;
+  async createCompany(@Body() createCompanyDto: CreateCompanyDto) {
+    const { nickname, trade_name, legal_name, cnpj, uf, city, logo } =
+      createCompanyDto;
 
     const companyAlreadyExists = await this.prismaService.company.findFirst({
       where: {
@@ -58,6 +60,17 @@ export class CompanyController {
         uf,
         city,
         logo,
+      },
+    });
+
+    return company;
+  }
+
+  @Delete(':id')
+  async deleteCompany(@Param('id') id: string) {
+    const company = await this.prismaService.company.delete({
+      where: {
+        company_id: id,
       },
     });
 

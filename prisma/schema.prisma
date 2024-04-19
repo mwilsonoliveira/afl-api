@@ -22,7 +22,7 @@ model Company {
   uf         String
   city       String
   logo       String
-  Contracts  Contract[]
+  contracts  Contract[]
 }
 
 model Contract {
@@ -38,17 +38,14 @@ model Contract {
 }
 
 model Department {
-  department_id String    @id @default(uuid())
+  department_id String     @id @default(uuid())
   name          String
-  service       Service[]
-  service_id    String
-  Contract      Contract  @relation(fields: [contract_id], references: [contract_id])
-  contract_id   String
+  services      Service[]
+  contracts     Contract[]
 }
 
 model Service {
-  service_id    String     @id @default(uuid())
-  name          String
-  Department    Department @relation(references: [department_id], fields: [department_id])
-  department_id String
+  service_id  String       @id @default(uuid())
+  name        String
+  departments Department[]
 }
