@@ -7,6 +7,8 @@ import { ContractsController } from './contracts/contracts.controller';
 import { DepartmentsController } from './departments/departments.controller';
 import { ServicesController } from './services/services.controller';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
 @Module({
   imports: [UsersModule, AuthModule],
   controllers: [
@@ -16,6 +18,12 @@ import { AuthModule } from './auth/auth.module';
     DepartmentsController,
     ServicesController,
   ],
-  providers: [PrismaService],
+  providers: [
+    PrismaService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
