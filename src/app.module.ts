@@ -6,8 +6,9 @@ import { UsersModule } from './users/users.module';
 import { ContractsController } from './contracts/contracts.controller';
 import { DepartmentsController } from './departments/departments.controller';
 import { ServicesController } from './services/services.controller';
+import { AuthModule } from './auth/auth.module';
 @Module({
-  imports: [UsersModule],
+  imports: [UsersModule, AuthModule],
   controllers: [
     AppController,
     CompanyController,
