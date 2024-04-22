@@ -21,11 +21,12 @@ git clone https://github.com/mwilsonoliveira/afl-api.git
 Acesse o diretório do projeto e instale as dependências do backend usando npm ou yarn:
 
 cd seu-projeto/afl-api
+
+```
 npm install
-
-# ou
-
+ou
 yarn install
+```
 
 ### Passo 3: Configurar as variáveis de ambiente
 
