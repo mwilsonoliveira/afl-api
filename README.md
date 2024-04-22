@@ -1,73 +1,81 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## Instalação do Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Esta documentação contém instruções para configurar e executar o backend do projeto.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### Pré-requisitos
 
-## Description
+- Node.js instalado (v16.0.0 ou superior)
+- npm (Node Package Manager) ou Yarn
+- PostgreSQL instalado e em execução
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Passo 1: Clonar o repositório
 
-## Installation
+Clone o repositório do projeto do GitHub:
 
 ```bash
-$ yarn install
+git clone https://github.com/mwilsonoliveira/afl-api.git
 ```
 
-## Running the app
+### Passo 2: Instalar as dependências
 
-```bash
-# development
-$ yarn run start
+Acesse o diretório do projeto e instale as dependências do backend usando npm ou yarn:
 
-# watch mode
-$ yarn run start:dev
+cd seu-projeto/afl-api
+npm install
 
-# production mode
-$ yarn run start:prod
+# ou
+
+yarn install
+
+### Passo 3: Configurar as variáveis de ambiente
+
+Crie um arquivo .env na raiz do diretório backend e defina as variáveis de ambiente necessárias.
+
+Você pode usar o arquivo .env.example como referência.
+
+### Passo 4: Criando as migrations
+
+Para termos um banco de dados que já tenha alguma informação é necessário rodar o comando
+
+```
+npx prisma migrate dev
 ```
 
-## Test
+### Passo 5: Executar o backend
 
-```bash
-# unit tests
-$ yarn run test
+Inicie o servidor Nest:
 
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+```
+npm run start:dev
+# ou
+yarn start:dev
 ```
 
-## Support
+O backend estará disponível em http://localhost:3000.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Passo 5: Populando o banco de dados
 
-## Stay in touch
+Para popular o banco de dados, rodar o comando:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+npx prisma db seed
+```
 
-## License
+### Passo 5: Testando as rotas
 
-Nest is [MIT licensed](LICENSE).
+Você pode usar o Postman ou qualquer outra ferramenta para testar as rotas do backend, que estarão disponíveis em http://localhost:3000.
+
+### Rotas disponíveis
+
+- POST /login: Rota para autenticar o usuário e receber um token de acesso.
+- POST /users: Rota para criar um usuário.
+
+- GET /companies: Rota para obter todas as empresas.
+- GET /companies/:id: Rota para obter uma empresa.
+- POST /companies/create: Rota para criar uma empresa
+- POST /companies/delete/:id: Rota para deletar uma empresa.
+
+- GET /contracts: Rota para obter contratos.
+- GET /contracts/:id: Rota para obter um contrato.
+- POST /contracts/create: Rota para criar um contrato.
+- POST /contracts/delete/:id: Rota para deletar um contrato.
